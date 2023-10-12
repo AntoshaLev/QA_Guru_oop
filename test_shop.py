@@ -28,6 +28,11 @@ class TestProducts:
         product.buy(product.quantity)
         assert product.quantity == 0
 
+    def test_product_buy_more_than_available(self, product):
+        #  ValueError при попытке купить больше, чем есть в наличии
+        with pytest.raises(ValueError):
+            product.buy(product.quantity + 1)
+
 
 class TestCart:
     """
@@ -81,9 +86,12 @@ class TestCart:
 
     def test_get_total_price(self, product, cart):
         # Проверка на получение стоимости корзины
+        cart.add_product(product, buy_count=10)
+        assert cart.products.get(product) == 10
         cart.add_product(product, buy_count=6)
-        assert cart.products.get(product) == 6
-        assert cart.get_total_price(product) == 600
+        assert cart.products.get(product) == 16
+        assert cart.get_total_price(product) == 1600
+        cart.clear()
 
     def test_buy_product_in_cart(self, product, cart):
         # Проверка на покупку quantity продуктов в корзине
