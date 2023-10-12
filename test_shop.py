@@ -9,6 +9,11 @@ def product():
 
 
 @pytest.fixture
+def second_product():
+    return Product("list", 100, "This is a list", 1000)
+
+
+@pytest.fixture
 def cart():
     return Cart()
 
@@ -84,12 +89,12 @@ class TestCart:
         cart.remove_product(product, 4)
         assert len(cart.products) == 0
 
-    def test_get_total_price(self, product, cart):
+    def test_get_total_price(self, product, second_product, cart):
         # Проверка на получение стоимости корзины
         cart.add_product(product, buy_count=10)
         assert cart.products.get(product) == 10
-        cart.add_product(product, buy_count=6)
-        assert cart.products.get(product) == 16
+        cart.add_product(second_product, buy_count=6)
+        assert cart.products.get(second_product) == 6
         assert cart.get_total_price(product) == 1600
         cart.clear()
 
